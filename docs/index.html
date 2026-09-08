@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Refresh Opportunity Scoring</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #f5f7fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #172554, #2563eb);
+            color: white;
+            padding: 70px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            max-width: 950px;
+            margin: auto;
+            font-size: 42px;
+            line-height: 1.2;
+        }
+
+        header p {
+            margin-top: 18px;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        nav a {
+            color: #1d4ed8;
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background: white;
+            margin-bottom: 30px;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+
+        h2 {
+            color: #1e3a8a;
+            margin-bottom: 18px;
+            font-size: 28px;
+        }
+
+        h3 {
+            color: #1d4ed8;
+            margin: 22px 0 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .abstract {
+            border-left: 5px solid #2563eb;
+        }
+
+        .highlight {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: #f8fafc;
+            padding: 22px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .result-card strong {
+            display: block;
+            font-size: 30px;
+            color: #2563eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .recommendation {
+            padding: 18px;
+            margin: 12px 0;
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+        }
+
+        footer {
+            background: #172554;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+            header h1 {
+                font-size: 30px;
+            }
+
+            nav a {
+                display: inline-block;
+                margin: 5px 7px;
+                font-size: 14px;
+            }
+
+            section {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Content Refresh Opportunity Scoring</h1>
+    <p>Using Search Performance Data to Identify High-Value Content Refresh Opportunities</p>
+</header>
+
+<nav>
+    <a href="#abstract">Abstract</a>
+    <a href="#introduction">Introduction</a>
+    <a href="#data">Data</a>
+    <a href="#methodology">Methodology</a>
+    <a href="#results">Results</a>
+    <a href="#recommendations">Recommendations</a>
+    <a href="#limitations">Limitations</a>
+    <a href="#reproducibility">Reproducibility</a>
+</nav>
+
+<main>
+
+<section id="abstract" class="abstract">
+    <h2>Abstract</h2>
+
+    <p>
+        This research investigates how search performance data can be used to
+        identify content pages that represent strong opportunities for
+        improvement and refresh. The study focuses on the practical problem of
+        deciding which existing pages should receive attention first.
+    </p>
+
+    <p>
+        Instead of treating every page equally, the approach combines search
+        performance signals to create an opportunity-oriented ranking. The goal
+        is to prioritize pages where improvements may have the greatest
+        potential impact.
+    </p>
+
+    <div class="highlight">
+        <strong>Key idea:</strong>
+        Content optimization should be prioritized using measurable search
+        performance evidence rather than intuition alone.
+    </div>
+</section>
+
+
+<section id="introduction">
+    <h2>1. Introduction / Problem Statement</h2>
+
+    <p>
+        Search-driven websites often contain a large number of existing pages.
+        However, teams have limited time and resources, making it difficult to
+        determine which pages should be refreshed first.
+    </p>
+
+    <p>
+        The central problem addressed by this study is therefore:
+    </p>
+
+    <div class="highlight">
+        <strong>
+            Which existing content pages provide the strongest opportunities
+            for improvement based on their search performance?
+        </strong>
+    </div>
+
+    <p>
+        This problem is particularly relevant to the FlyRank content workflow,
+        where search data can be transformed into actionable content
+        recommendations.
+    </p>
+</section>
+
+
+<section id="data">
+    <h2>2. Data</h2>
+
+    <p>
+        The analysis uses search performance data associated with existing
+        content pages. Important signals include impressions, clicks,
+        click-through rate and ranking-related information.
+    </p>
+
+    <h3>Important Search Signals</h3>
+
+    <ul>
+        <li><strong>Impressions:</strong> How often a page appears in search results.</li>
+        <li><strong>Clicks:</strong> The number of visits generated from search.</li>
+        <li><strong>CTR:</strong> The proportion of impressions that result in clicks.</li>
+        <li><strong>Search position:</strong> An indication of how prominently a page appears.</li>
+    </ul>
+
+    <p>
+        Pages with meaningful search visibility can provide especially useful
+        opportunities because improvements to existing content may build on
+        traffic that already exists.
+    </p>
+</section>
+
+
+<section id="methodology">
+    <h2>3. Methodology</h2>
+
+    <p>
+        The methodology follows a structured content-opportunity scoring
+        process.
+    </p>
+
+    <h3>Step 1 — Data Preparation</h3>
+    <p>
+        Search performance records were inspected and prepared for analysis.
+        Relevant pages and performance signals were identified.
+    </p>
+
+    <h3>Step 2 — Performance Analysis</h3>
+    <p>
+        Existing search signals were analyzed to understand how pages differ
+        in visibility and performance.
+    </p>
+
+    <h3>Step 3 — Opportunity Scoring</h3>
+    <p>
+        Performance indicators were combined to estimate the relative
+        opportunity associated with refreshing each page.
+    </p>
+
+    <h3>Step 4 — Ranking</h3>
+    <p>
+        Pages were ranked according to their estimated opportunity so that
+        content teams can focus their effort on the highest-priority pages
+        first.
+    </p>
+
+    <div class="highlight">
+        <strong>Pipeline:</strong>
+        Search Data → Cleaning → Feature Analysis → Opportunity Score →
+        Ranking → Content Recommendations
+    </div>
+</section>
+
+
+<section id="results">
+    <h2>4. Results</h2>
+
+    <p>
+        The analysis demonstrates that search performance can be used to
+        distinguish between pages with different levels of content-refresh
+        opportunity.
+    </p>
+
+    <div class="results">
+        <div class="result-card">
+            <strong>90d</strong>
+            <span>Search performance window</span>
+        </div>
+
+        <div class="result-card">
+            <strong>CTR</strong>
+            <span>Engagement signal</span>
+        </div>
+
+        <div class="result-card">
+            <strong>Rank</strong>
+            <span>Search visibility signal</span>
+        </div>
+
+        <div class="result-card">
+            <strong>Score</strong>
+            <span>Opportunity prioritization</span>
+        </div>
+    </div>
+
+    <h3>Baseline vs. Model-Based Prioritization</h3>
+
+    <p>
+        A simple baseline would treat pages similarly or prioritize them using
+        only one metric. The proposed opportunity-scoring approach considers
+        multiple performance signals, producing a more informative ranking.
+    </p>
+
+    <table>
+        <tr>
+            <th>Approach</th>
+            <th>Advantage</th>
+            <th>Limitation</th>
+        </tr>
+
+        <tr>
+            <td>Simple baseline</td>
+            <td>Easy to understand and implement</td>
+            <td>Can ignore important performance signals</td>
+        </tr>
+
+        <tr>
+            <td>Opportunity scoring</td>
+            <td>Combines multiple signals for prioritization</td>
+            <td>Requires careful interpretation of the score</td>
+        </tr>
+    </table>
+</section>
+
+
+<section id="recommendations">
+    <h2>5. Ranked Recommendations</h2>
+
+    <div class="recommendation">
+        <strong>Priority 1 — Refresh pages with strong search visibility.</strong>
+        <p>
+            Pages already receiving meaningful impressions can provide a
+            strong foundation for optimization.
+        </p>
+    </div>
+
+    <div class="recommendation">
+        <strong>Priority 2 — Investigate pages with weak engagement.</strong>
+        <p>
+            Pages receiving impressions but relatively limited clicks may
+            benefit from improvements to titles, descriptions and content
+            relevance.
+        </p>
+    </div>
+
+    <div class="recommendation">
+        <strong>Priority 3 — Improve content relevance and usefulness.</strong>
+        <p>
+            Refresh content to better match the search intent represented by
+            the queries generating visibility.
+        </p>
+    </div>
+
+    <div class="recommendation">
+        <strong>Priority 4 — Re-evaluate after publishing changes.</strong>
+        <p>
+            Search performance should be monitored after content updates to
+            determine whether the refresh produced measurable improvement.
+        </p>
+    </div>
+</section>
+
+
+<section id="limitations">
+    <h2>6. Limitations</h2>
+
+    <ul>
+        <li>
+            Search performance alone does not capture every factor affecting
+            content quality.
+        </li>
+
+        <li>
+            Opportunity scores should be interpreted as prioritization signals,
+            not guaranteed traffic forecasts.
+        </li>
+
+        <li>
+            Search rankings and user behavior can change over time.
+        </li>
+
+        <li>
+            Content quality, search intent and business value should also be
+            considered before implementing a recommendation.
+        </li>
+    </ul>
+</section>
+
+
+<section id="reproducibility">
+    <h2>7. Reproducibility</h2>
+
+    <p>
+        The analysis was developed using a reproducible data-analysis workflow.
+        The research notebook and supporting project files can be maintained
+        alongside this paper so that the analysis can be inspected and
+        repeated.
+    </p>
+
+    <h3>Recommended Reproducibility Workflow</h3>
+
+    <ol>
+        <li>Load the original search-performance dataset.</li>
+        <li>Clean and validate the relevant fields.</li>
+        <li>Calculate the required performance signals.</li>
+        <li>Generate opportunity scores.</li>
+        <li>Rank pages by opportunity.</li>
+        <li>Inspect the highest-priority recommendations.</li>
+        <li>Compare results after future content updates.</li>
+    </ol>
+</section>
+
+
+<section>
+    <h2>8. Conclusion</h2>
+
+    <p>
+        This study presents a practical framework for turning search
+        performance data into content-refresh priorities. Rather than asking
+        content teams to review every page equally, an opportunity score can
+        help identify where limited optimization resources should be focused.
+    </p>
+
+    <p>
+        The approach connects data analysis with a real content problem:
+        finding existing pages where a targeted refresh may create meaningful
+        search-performance improvements.
+    </p>
+</section>
+
+
+<section>
+    <h2>9. Acknowledgments & Data Credit</h2>
+
+    <p>
+        This project was developed as part of the Machine Learning internship
+        and Capstone research work focused on applying data-driven methods to
+        real content and search-performance problems.
+    </p>
+
+    <p>
+        Data and methodology should be credited to the original source and
+        project materials used during the research process.
+    </p>
+</section>
+
+</main>
+
+
+<footer>
+    <p><strong>Content Refresh Opportunity Scoring</strong></p>
+    <p>Capstone Research Paper</p>
+    <p>© 2026</p>
+</footer>
+
+</body>
+</html>
